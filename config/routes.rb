@@ -1,6 +1,13 @@
 Rails.application.routes.draw do
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
+  defaults format: :json do
+    namespace :api do
+      namespace :v1 do
+        resources :metrics, only: [:create]
+        get '/allmetrics', to: 'metrics#metric_list'
+        get '/metric_entries/:name', to: 'metrics#metric_entries'
+      end
+    end
 
-  # Defines the root path route ("/")
-  # root "articles#index"
+    match '*unmatched', to: 'application#route404', via: :all
+  end
 end
