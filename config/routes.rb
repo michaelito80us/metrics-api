@@ -3,8 +3,8 @@ Rails.application.routes.draw do
     namespace :api do
       namespace :v1 do
         resources :metrics, only: [:create]
-        get '/allmetrics', to: 'metrics#metric_list'
-        get '/metric_entries/:name', to: 'metrics#metric_entries'
+        get '/list', to: 'metrics#metric_list'
+        post '/averages', to: 'metrics#metric_averages'
       end
     end
 

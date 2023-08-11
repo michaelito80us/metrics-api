@@ -1,5 +1,3 @@
-# db/seeds.rb
-
 # Clear existing metric data
 Metric.delete_all
 
@@ -16,16 +14,16 @@ while current_time <= end_time
   temperature = rand(10.0..35.0).round(1)
 
   # Create a metric entry
-  Metric.create(name: 'temperature', value: temperature, timestamp: current_time)
+  Metric.create(name: 'TEMPERATURE', value: temperature, timestamp: current_time)
   counter += 1
   # Generate random time intervals for the next measurement
   current_time += case rand(1..100)
-                  when 1..60  # 60% chance of adding measurements per minute
-                    1.minute
-                  when 61..90 # 30% chance of adding measurements per hour
+                  when 1..40  # 40% chance of adding measurements per second
+                    10.second
+                  when 41..70 # 30% chance of adding measurements per minute
+                    10.minute
+                  else # 30% chance of adding measurements per hour
                     1.hour
-                  else        # 10% chance of adding measurements per day
-                    1.day
                   end
 end
 

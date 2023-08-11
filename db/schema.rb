@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_08_10_100345) do # rubocop:disable Style/NumericLiterals
+ActiveRecord::Schema[7.0].define(version: 2023_08_10_100345) do
   create_table "metrics", force: :cascade do |t|
     t.string "name"
     t.decimal "value"
@@ -18,4 +18,5 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_10_100345) do # rubocop:disabl
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
+
 end

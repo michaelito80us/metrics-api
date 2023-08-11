@@ -22,3 +22,15 @@ Things you may want to cover:
 - Deployment instructions
 
 - ...
+
+the application is dockerized, so you can run it with the following commands:
+
+```bash
+docker-compose build
+docker-compose up
+```
+
+you must have docker and docker-compose installed on your machine.
+
+this backend is then accessible on port 3001 using the following url:
+hhtp://localhost:3001
