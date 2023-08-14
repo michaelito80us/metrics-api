@@ -35,6 +35,24 @@ class Api::V1::MetricsController < ApplicationController
     render json: averages, status: :ok
   end
 
+  # POST /api/v1/detailed_list
+  # Retrevies all the last 30 entries of a metric
+  def detailed_list
+    metric_params = params.permit(:metric, :format)
+    metric = metric_params[:metric]
+
+    # Check if metric exists
+    if Metric.where(name: metric).empty?
+      render json: { error: 'metric does not exist' }, status: :unprocessable_entity
+      return
+    end
+
+    # Retrieve last 30 entries of metric
+    entries = Metric.where(name: metric).order(timestamp: :desc).limit(30).reverse
+
+    render json: entries, status: :ok
+  end
+
   private
 
   # Strong parameters for creating a metric
