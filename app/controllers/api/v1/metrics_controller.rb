@@ -4,7 +4,9 @@ class Api::V1::MetricsController < ApplicationController
   def create
     @metric = Metric.new(metric_params)
     if @metric.save
-      render json: { message: 'Metric created successfully' }, status: :created
+      entries = Metric.where(name: @metric.name).order(timestamp: :desc).limit(30)
+      puts "entries: #{entries}"
+      render json: { message: 'Metric created successfully', entries: }, status: :created
     else
       render json: { errors: @metric.errors.full_messages }, status: :unprocessable_entity
     end
@@ -33,24 +35,6 @@ class Api::V1::MetricsController < ApplicationController
     averages = Metric.calculate_averages(metric_params[:metric], start_time, end_time, user_timezone)
 
     render json: averages, status: :ok
-  end
-
-  # POST /api/v1/detailed_list
-  # Retrevies all the last 30 entries of a metric
-  def detailed_list
-    metric_params = params.permit(:metric, :format)
-    metric = metric_params[:metric]
-
-    # Check if metric exists
-    if Metric.where(name: metric).empty?
-      render json: { error: 'metric does not exist' }, status: :unprocessable_entity
-      return
-    end
-
-    # Retrieve last 30 entries of metric
-    entries = Metric.where(name: metric).order(timestamp: :desc).limit(30).reverse
-
-    render json: entries, status: :ok
   end
 
   private

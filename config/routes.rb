@@ -6,7 +6,6 @@ Rails.application.routes.draw do
         resources :metrics, only: [:create]
         get '/metric_list', to: 'metrics#metric_list'
         post '/averages', to: 'metrics#metric_averages'
-        post '/detailed_list', to: 'metrics#detailed_list'
       end
     end
 
