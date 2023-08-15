@@ -5,7 +5,6 @@ class Api::V1::MetricsController < ApplicationController
     @metric = Metric.new(metric_params)
     if @metric.save
       entries = Metric.where(name: @metric.name).order(timestamp: :desc).limit(30)
-      puts "entries: #{entries}"
       render json: { message: 'Metric created successfully', entries: }, status: :created
     else
       render json: { errors: @metric.errors.full_messages }, status: :unprocessable_entity
@@ -16,7 +15,10 @@ class Api::V1::MetricsController < ApplicationController
   # Retrieves the unique list of metric names
   def metric_list
     names = Metric.pluck(:name).uniq
-    render json: { metric_list: names }, status: :ok
+    metric_list = names.map do |name|
+      { value: name, label: name.capitalize }
+    end
+    render json: { data: metric_list }, status: :ok
   end
 
   # POST /api/v1/averages
