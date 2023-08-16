@@ -14,7 +14,7 @@ class Api::V1::MetricsController < ApplicationController
   # GET /api/v1/list
   # Retrieves the unique list of metric names
   def metric_list
-    names = Metric.pluck(:name).uniq
+    names = Metric.pluck(:name).uniq.sort
     metric_list = names.map do |name|
       { value: name, label: name.capitalize }
     end
