@@ -1,36 +1,85 @@
-# README
+# Factorial take home assignment API
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+As part of the job interview process with Factorial, I was tasked with creating a full-stack application, made up of a frontend and a backend. This repository covers the backend portion of the assignment.
 
-Things you may want to cover:
+**Project Requirement from Factorial**:
+Develop a Frontend + Backend application that facilitates the posting and visualization of metrics. Each metric entry should possess a timestamp, name, and value. The metrics must be displayed on a timeline and should be capable of showcasing averages per minute, hour, and day. All metrics will be stored persistently in a database.
 
-- Ruby version 3.1.2
+## Table of Contents
 
-- System dependencies
+- [Backend Setup](#backend-setup)
+  - [Setup Directly on Computer](#setup-directly-on-computer)
+  - [Setup via Docker](#setup-via-docker)
+- [Seed Data](#seed-data)
+- [Contributing](#contributing)
+- [License](#license)
 
-- Configuration
+## Backend Setup
 
-- Database creation
+The backend is developed using Ruby on Rails. Make sure you're using the right version of Ruby. The required Ruby version for this project is `3.1.2`.
 
-- Database initialization
+### Setup Directly on Computer
 
-- How to run the test suite
+1. **Check Ruby Version**: Make sure you have Ruby version `3.1.2`. You can check your Ruby version with the following command:
 
-- Services (job queues, cache servers, search engines, etc.)
+   ```bash
+   ruby -v
+   ```
 
-- Deployment instructions
+   If you don't have the required version, you might want to consider using a Ruby version manager like [RVM](https://rvm.io/) or [rbenv](https://github.com/rbenv/rbenv).
 
-- ...
+2. **Install Dependencies**:
 
-the application is dockerized, so you can run it with the following commands:
+   ```bash
+   bundle install
+   ```
 
-```bash
-docker-compose build
-docker-compose up
-```
+3. **Set Up Database** For this project we are using SQLite. You can set up the database with:
 
-you must have docker and docker-compose installed on your machine.
+   ```bash
+   rails db:create db:migrate
+   ```
 
-this backend is then accessible on port 3001 using the following url:
-hhtp://localhost:3001
+4. **Seed the Database** (optional): If you want to use the provided seed data, you can populate your database with:
+
+   ```bash
+   rails db:seed
+   ```
+
+5. **Start the Server**:
+
+   ```bash
+   rails s
+   ```
+
+   After running the server, you can access the backend API at `http://localhost:3001`.
+
+### Setup via Docker
+
+1. **Build the Docker Image**:
+
+   ```bash
+   docker-compose build
+   ```
+
+2. **Run the Container**:
+
+   ```bash
+   docker-compose up
+   ```
+
+   Once the container is up, you can access the backend API at `http://localhost:3001`.
+
+## Features
+
+- **Post Metrics**: Ability to post new metric data with a timestamp, name, and value.
+- **Visualize Metrics**: Display metrics on a timeline.
+- **Compute Averages**: Show calculated averages of metrics per minute, hour, and day.
+
+## Seed Data
+
+The provided seed data simulates random temperature measurements over the last 3 days. These measurements can occur at varied intervals - some happening every few seconds, others every few minutes or hours.
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.

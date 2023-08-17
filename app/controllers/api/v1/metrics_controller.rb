@@ -25,18 +25,19 @@ class Api::V1::MetricsController < ApplicationController
   # Retrieves metric entries within a specified time range, and averages them by minute, hour, and day
   def metric_averages
     metric_params = params.permit(:metric, :start_time, :end_time, :format, :timezone)
-    user_timezone = metric_params[:timezone]
-    start_time, end_time = parse_and_validate_times(metric_params[:start_time], metric_params[:end_time])
+    Time.use_zone(metric_params[:timezone]) do
+      start_time, end_time = parse_and_validate_times(metric_params[:start_time], metric_params[:end_time])
 
-    # Check if start time and end time are valid
-    if start_time.nil? || end_time.nil?
-      render json: { error: 'end_time must be greater than start_time' }, status: :unprocessable_entity
-      return
+      # Check if start time and end time are valid
+      if start_time.nil? || end_time.nil?
+        render json: { error: 'end_time must be greater than start_time' }, status: :unprocessable_entity
+        return
+      end
+
+      averages = Metric.calculate_averages(metric_params[:metric], start_time, end_time)
+
+      render json: { name: metric_params[:metric].capitalize, averages: }, status: :ok
     end
-
-    averages = Metric.calculate_averages(metric_params[:metric], start_time, end_time, user_timezone)
-
-    render json: averages, status: :ok
   end
 
   private

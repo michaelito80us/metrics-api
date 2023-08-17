@@ -9,27 +9,29 @@ class Metric < ApplicationRecord
                                     where(name: name.downcase, timestamp: start_time..end_time).order(timestamp: :asc)
                                   }
 
-  def self.calculate_averages(name, start_time, end_time, user_timezone)
-    metric_entries = for_name_and_time_range(name, start_time, end_time)
+  def self.calculate_averages(name, start_time, end_time)
+    metric_entries_day = for_name_and_time_range(name, start_time.beginning_of_day, end_time.end_of_day)
+    metric_entries_hour = for_name_and_time_range(name, start_time.beginning_of_hour, end_time.end_of_hour)
+    metric_entries_minute = for_name_and_time_range(name, start_time.beginning_of_minute, end_time.end_of_minute)
+
     {
-      per_minute: average_by_interval(metric_entries, :minute, user_timezone),
-      per_hour: average_by_interval(metric_entries, :hour, user_timezone),
-      per_day: average_by_interval(metric_entries, :day, user_timezone)
+      per_minute: average_by_interval(metric_entries_minute, :minute),
+      per_hour: average_by_interval(metric_entries_hour, :hour),
+      per_day: average_by_interval(metric_entries_day, :day)
     }
   end
 
   # Averages the given metric data by the specified interval (:minute, :hour, or :day)
   # Returns a hash where keys are the beginning of the intervals and values are the calculated averages
-  def self.average_by_interval(metric_data, interval, user_timezone)
+  def self.average_by_interval(metric_data, interval)
     interval_data = group_by_interval(metric_data, interval)
 
     # Convert the keys to the user's time zone and format them
-    formatted_interval_data = interval_data.transform_keys do |key|
-      format_key(key, interval, user_timezone)
-    end
-
-    formatted_interval_data.transform_values do |entries|
-      averages_calculation(entries)
+    interval_data.map do |key, entries|
+      {
+        interval: key,
+        average: averages_calculation(entries)
+      }
     end
   end
 
@@ -40,14 +42,6 @@ class Metric < ApplicationRecord
       when :hour then entry.timestamp.beginning_of_hour
       when :day then entry.timestamp.beginning_of_day
       end
-    end
-  end
-
-  def self.format_key(key, interval, user_timezone)
-    case interval
-    when :minute then key.in_time_zone(user_timezone).strftime('%Y-%m-%d %H:%M')
-    when :hour then key.in_time_zone(user_timezone).strftime('%Y-%m-%d %H:00')
-    when :day then key.in_time_zone(user_timezone).strftime('%Y-%m-%d')
     end
   end
 
