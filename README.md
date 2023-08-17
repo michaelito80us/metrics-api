@@ -1,6 +1,6 @@
 # Metrics API
 
-As part of the job interview process with Factorial HF, I was tasked with creating a full-stack application, made up of a frontend and a backend. This repository covers the backend portion of the assignment.
+As part of the job interview process with Factorial HR, I was tasked with creating a full-stack application, made up of a frontend and a backend. This repository covers the backend portion of the assignment.
 
 **Project Requirement from Factorial**:
 Develop a Frontend + Backend application that facilitates the posting and visualization of metrics. Each metric entry should possess a timestamp, name, and value. The metrics must be displayed on a timeline and should be capable of showcasing averages per minute, hour, and day. All metrics will be stored persistently in a database.
