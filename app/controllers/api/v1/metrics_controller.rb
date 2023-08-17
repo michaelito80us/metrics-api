@@ -2,12 +2,14 @@ class Api::V1::MetricsController < ApplicationController
   # POST /api/v1/metrics
   # Creates a new metric entry
   def create
-    @metric = Metric.new(metric_params)
-    if @metric.save
-      entries = Metric.where(name: @metric.name).order(timestamp: :desc).limit(30)
-      render json: { message: 'Metric created successfully', entries: }, status: :created
-    else
-      render json: { errors: @metric.errors.full_messages }, status: :unprocessable_entity
+    Time.use_zone(params[:timezone]) do
+      @metric = Metric.new(metric_params)
+      if @metric.save
+        entries = Metric.where(name: @metric.name).order(timestamp: :desc).limit(30)
+        render json: { message: 'Metric created successfully', entries: }, status: :created
+      else
+        render json: { errors: @metric.errors.full_messages }, status: :unprocessable_entity
+      end
     end
   end
 
