@@ -9,15 +9,17 @@ class Metric < ApplicationRecord
                                     where(name: name.downcase, timestamp: start_time..end_time).order(timestamp: :asc)
                                   }
 
+  # Calculates the average metrics for a given name in various time intervals (per minute, per hour, per day)
+  # between the provided start_time and end_time.
   def self.calculate_averages(name, start_time, end_time)
     metric_entries_day = for_name_and_time_range(name, start_time.beginning_of_day, end_time.end_of_day)
     metric_entries_hour = for_name_and_time_range(name, start_time.beginning_of_hour, end_time.end_of_hour)
     metric_entries_minute = for_name_and_time_range(name, start_time.beginning_of_minute, end_time.end_of_minute)
 
     {
-      per_minute: average_by_interval(metric_entries_minute, :minute),
+      per_day: average_by_interval(metric_entries_day, :day),
       per_hour: average_by_interval(metric_entries_hour, :hour),
-      per_day: average_by_interval(metric_entries_day, :day)
+      per_minute: average_by_interval(metric_entries_minute, :minute)
     }
   end
 
@@ -35,12 +37,14 @@ class Metric < ApplicationRecord
     end
   end
 
+  # Groups metric data by the provided time interval, creating a hash where keys are the
+  # beginning of each time interval and values are arrays of metric data falling within that interval.
   def self.group_by_interval(metric_data, interval)
     metric_data.group_by do |entry|
       case interval
-      when :minute then entry.timestamp.beginning_of_minute
-      when :hour then entry.timestamp.beginning_of_hour
       when :day then entry.timestamp.beginning_of_day
+      when :hour then entry.timestamp.beginning_of_hour
+      when :minute then entry.timestamp.beginning_of_minute
       end
     end
   end
