@@ -12,8 +12,8 @@ Develop a Frontend + Backend application that facilitates the posting and visual
 - [Backend Setup](#backend-setup)
   - [Setup Directly on Computer](#setup-directly-on-computer)
   - [Setup via Docker](#setup-via-docker)
+- [Features](#features)
 - [Seed Data](#seed-data)
-- [Contributing](#contributing)
 - [License](#license)
 
 ## Backend Setup
